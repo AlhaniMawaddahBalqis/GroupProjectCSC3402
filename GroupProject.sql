@@ -61,4 +61,3 @@ quantity NUMBER,
 unitprice NUMBER,
 totalprice NUMBER);
  
- select*from MEDICATIONS;
