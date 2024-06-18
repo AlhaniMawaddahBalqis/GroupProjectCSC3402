@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Pharmacy Management System</title>
+    <style>
+        body.register-body {
+            background-color: #36383D;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .register-container {
+            width: 900px;
+            height: 600px;
+            display: flex;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .left-side, .right-side {
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .left-side {
+            background-color: #d9d9d9;
+        }
+
+        .right-side {
+            background-color: #6081b8;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .logo h1 {
+            color: #fafafa;
+            text-shadow: 3px 0px 4px black;
+            text-align: center;
+            margin-top: -10px;
+        }
+
+        .register-form {
+            width: 100%;
+        }
+
+        .register-form h1{
+            color: #fafafa;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .register-form .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #fafafa;
+        }
+
+        .register-form .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .register-btn {
+            width: 30%;
+            padding: 10px;
+            background-color: #364f6b;
+            color: #fafafa;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .register-btn:hover {
+            background-color: #2b3a57;
+        }
+
+        .login-label {
+            margin-top: 15px;
+            color: #fafafa;
+            text-align: center;
+        }
+
+        .login-label a {
+            color: #fafafa;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .login-link {
+            color: #364f6b;
+            font-weight: bold;
+        }
+
+        .login-link:hover {
+            color: #2b3a57;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="register-body">
+<div class="register-container">
+    <div class="left-side">
+        <div class="logo">
+            <img th:src="@{/images/PeonyPharmacy.png}" alt="Peony Logo">
+            <h1>Peony Pharmacy Management System</h1>
+        </div>
+    </div>
+    <div class="right-side">
+        <form th:action="@{/registration}" method="post" class="register-form">
+            <h1>Register a New Account</h1>
+            <div class="form-group">
+                <label for="pharmacistId">Pharmacist ID</label>
+                <input type="text" id="pharmacistId" name="pharmacistId" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="contactNo">Contact No</label>
+                <input type="text" id="contactNo" name="contactNo" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="register-btn">Register</button>
+            <p class="login-label">Already have an account? <a th:href="@{/login}" class="login-link">Login here</a></p>
+        </form>
+    </div>
+</div>
+<script crossorigin="anonymous" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

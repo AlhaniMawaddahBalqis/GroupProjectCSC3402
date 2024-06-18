@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Pharmacist Profile</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2e2e2e;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wrapper {
+            display: flex;
+            height: 100vh;
+        }
+
+        #sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            transition: all 0.3s;
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        #sidebar.active {
+            margin-left: -250px;
+        }
+
+        #sidebar .sidebar-header {
+            text-align: center;
+            padding: 20px;
+            background-color: #34495e;
+        }
+
+        #sidebar ul.components {
+            padding: 20px;
+            list-style: none;
+        }
+
+        #sidebar ul li {
+            padding: 15px 5px;
+            text-align: left;
+        }
+
+        #sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        #sidebar ul li a .fas {
+            margin-right: 10px;
+        }
+
+        #sidebar ul li a:hover {
+            background-color: #495057;
+            border-radius: 4px;
+        }
+
+
+        #content {
+            flex: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+            transition: all 0.3s;
+            margin-left: 250px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 80%;
+            margin: 20px auto;
+        }
+
+        .container h2 {
+            color: #333;
+        }
+
+        .top-nav {
+            background-color: #f8f9fa;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 300px;
+            padding: 5px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-link {
+            display: block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            min-width: 150px;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .form-group input[readonly] {
+            background-color: #f6f6f6; /* Darker background color for read-only inputs */
+        }
+
+        .update-btn {
+            width: max-content;
+            padding: 10px;
+            background-color: #364f6b;
+            color: #fafafa;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .update-btn:hover {
+            background-color: #2b3a57;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Peony Pharmacy</h3>
+        </div>
+        <ul class="components">
+            <li>
+                <a th:href="@{/dashboard}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            <li>
+                <a th:href="@{/pharmacy/prescription-list}"><i class="fas fa-prescription-bottle-alt"></i> Prescriptions</a>
+            </li>
+            <li>
+                <a th:href="@{/pharmacy/medication-list}"><i class="fas fa-pills"></i> Medications</a>
+            </li>
+            <li>
+                <a th:href="@{/pharmacy/patient-list}"><i class="fas fa-user"></i> Patients</a>
+            </li>
+            <li>
+                <a th:href="@{/pharmacy/physician-list}"><i class="fas fa-user-md"></i> Physicians</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="content">
+        <nav class="top-nav">
+            <button type="button" id="sidebarCollapse" class="sidebar-btn">
+                <i class="fas fa-align-left"></i>
+            </button>
+            <input type="text" placeholder="Search" class="search-bar">
+            <div class="profile-dropdown">
+                <a th:href="@{/pharmacist-profile}" class="profile-link">
+                    <img src="/images/profile-logo.png" alt="Profile">
+                </a>
+                <div class="dropdown-content">
+                    <a th:href="@{/pharmacist-profile}">Profile</a>
+                    <a th:href="@{/logout}">Log out</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <main class="content">
+                <h2>Pharmacist Profile</h2>
+                <form id="pharmacist-profile-form" th:action="@{/pharmacist-profile/update}" method="get">
+                    <div class="form-group">
+                        <label for="pharmacistId">Pharmacist ID:</label>
+                        <input type="text" id="pharmacistId" name="pharmacistId" th:value="${pharmacist.pharmacistId}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" th:value="${pharmacist.name}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactNo">Contact Number:</label>
+                        <input type="text" id="contactNo" name="contactNo" th:value="${pharmacist.contactNo}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" th:value="${pharmacist.email}" readonly>
+                    </div>
+                    <button type="submit" class="update-btn">Update</button>
+                </form>
+            </main>
+        </div>
+    </div>
+</div>
+
+<!-- Link to Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+
+        // Handle profile link click
+        $('.profile-link').on('click', function (event) {
+            event.preventDefault();
+            var dropdownContent = $(this).next('.dropdown-content');
+            dropdownContent.toggleClass('show');
+        });
+
+        // Close the dropdown if the user clicks outside of it
+        $(window).on('click', function (event) {
+            if (!event.target.matches('.profile-link img')) {
+                var dropdowns = $(".dropdown-content");
+                dropdowns.each(function () {
+                    if ($(this).hasClass('show')) {
+                        $(this).removeClass('show');
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>
