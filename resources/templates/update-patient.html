@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peony Pharmacy - Update Patient</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wrapper {
+      display: flex;
+      height: 100vh;
+    }
+
+    #sidebar {
+      width: 250px;
+      background-color: #2c3e50;
+      color: white;
+      transition: all 0.3s;
+      height: 100vh;
+      overflow-y: auto;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    #sidebar.active {
+      margin-left: -250px;
+    }
+
+    #sidebar .sidebar-header {
+      text-align: center;
+      padding: 20px;
+      background-color: #34495e;
+    }
+
+    #sidebar ul.components {
+      padding: 20px 0;
+      list-style: none;
+    }
+
+    #sidebar ul li {
+      padding: 10px;
+      text-align: left;
+    }
+
+    #sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      display: block;
+    }
+
+    #sidebar ul li a:hover {
+      background-color: #495057;
+    }
+
+    #content {
+      flex: 1;
+      padding: 20px;
+      background-color: #f8f9fa;
+      transition: all 0.3s;
+      margin-left: 250px;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    .navbar {
+      background-color: #f8f9fa;
+    }
+
+    .card {
+      margin: 20px 0;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    .stats .stat {
+      text-align: center;
+      padding: 20px;
+      background-color: white;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      width: 30%;
+    }
+
+    .stats .stat h3 {
+      font-size: 3em;
+      margin: 0;
+    }
+
+    .stats .stat p {
+      margin: 10px 0 0;
+      font-size: 1.2em;
+      color: #666;
+    }
+
+    .progress {
+      height: 20px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <!-- Sidebar -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <h3>Peony Pharmacy</h3>
+    </div>
+    <ul class="components">
+      <li>
+        <a href="/"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      </li>
+      <li>
+        <a href="/prescriptions/list"><i class="fas fa-prescription-bottle-alt"></i> Prescriptions</a>
+      </li>
+      <li class="active">
+        <a href="/patients/list"><i class="fas fa-user"></i> Patients</a>
+      </li>
+      <li>
+        <a href="/medications/list"><i class="fas fa-pills"></i> Medications</a>
+      </li>
+      <li>
+        <a href="/physicians/list"><i class="fas fa-user-md"></i> Physicians</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Page Content -->
+  <div id="content">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <button type="button" id="sidebarCollapse" class="btn btn-info">
+          <i class="fas fa-align-left"></i>
+        </button>
+        <input type="text" class="form-control mr-sm-2" placeholder="Search" style="width: 300px;">
+        <a href="/profile.html" class="ml-3">
+          <img src="profile.jpeg" alt="User Profile" class="profile-pic" style="width: 40px; height: 40px; border-radius: 50%;">
+        </a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="stats">
+        <div class="stat">
+          <h3>1000</h3>
+          <p>Total Prescriptions</p>
+          <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="1000" aria-valuemin="0" aria-valuemax="1000"></div>
+          </div>
+        </div>
+        <div class="stat">
+          <h3>970</h3>
+          <p>Completed Prescriptions</p>
+          <div class="progress">
+            <div class="progress-bar bg-info" role="progressbar" style="width: 97%" aria-valuenow="970" aria-valuemin="0" aria-valuemax="1000"></div>
+          </div>
+        </div>
+        <div class="stat">
+          <h3>30</h3>
+          <p>In Progress</p>
+          <div class="progress">
+            <div class="progress-bar bg-warning" role="progressbar" style="width: 3%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="1000"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Update Patient</h2>
+      <div class="form-container">
+        <form th:action="@{/patients/update}" th:object="${patient}" method="post">
+          <div class="form-group">
+            <label for="patientId">Patient ID</label>
+            <input type="text" class="form-control" id="patientId" th:field="*{patientId}" readonly>
+          </div>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Enter Name">
+          </div>
+          <div class="form-group">
+            <label for="ic">IC</label>
+            <input type="text" class="form-control" id="ic" th:field="*{ic}" placeholder="Enter IC">
+          </div>
+          <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="text" class="form-control" id="dob" th:field="*{dob}">
+          </div>
+          <div class="form-group">
+            <label for="contact">Contact No</label>
+            <input type="text" class="form-control" id="contact" th:field="*{contact}" placeholder="Enter Contact No">
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <input type="text" class="form-control" id="gender" th:field="*{gender}" placeholder="Enter Gender">
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='/patients/list';"><i class="fas fa-arrow-left"></i> Back</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#sidebarCollapse').on('click', function () {
+      $('#sidebar').toggleClass('active');
+    });
+
+    $('#dob').datepicker({
+      format: 'yyyy-mm-dd',
+      startDate: '1900-01-01',
+      endDate: '2030-12-31',
+      autoclose: true,
+      todayHighlight: true
+    });
+  });
+</script>
+
+</body>
+</html>
