@@ -1,15 +1,14 @@
 package com.csc3402.lab.pharmacy.controller;
 
 import com.csc3402.lab.pharmacy.model.Medication;
-import com.csc3402.lab.pharmacy.model.Patient;
 import com.csc3402.lab.pharmacy.service.MedicationService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -24,18 +23,17 @@ public class MedicationController {
     }
 
     @GetMapping("/add")
-    public String showAddMedicationForm() {
+    public String showAddMedicationForm(Model model) {
+        model.addAttribute("medication", new Medication());
         return "add-medication";
     }
 
     @PostMapping("/add")
-    public String addMedication(@RequestParam("medId") String medId,
-                                @RequestParam("name") String name,
-                                @RequestParam("brand") String brand,
-                                @RequestParam("expDate") String expDate,
-                                @RequestParam("quantity") int quantity){
+    public String addMedication(@Valid @ModelAttribute("medication") Medication medication, BindingResult result) {
+        if (result.hasErrors()) {
+            return "add-medication";
+        }
         try {
-            Medication medication = new Medication(medId, name, brand, LocalDate.parse(expDate), quantity);
             medicationService.addMedication(medication);
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,15 +56,17 @@ public class MedicationController {
         return "update-medication";
     }
 
-    @GetMapping("/update")
-    public String showUpdateForm(@ModelAttribute("medication") Medication medication, Model model) {
-        model.addAttribute("medication", medication);
-        return "update-medication";
-    }
-
     @PostMapping("/update")
-    public String updateMedication(@ModelAttribute("medication") Medication medication) {
-        medicationService.updateMedication(medication);
+    public String updateMedication(@Valid @ModelAttribute("medication") Medication medication, BindingResult result) {
+        if (result.hasErrors()) {
+            return "update-medication";
+        }
+        try {
+            medicationService.updateMedication(medication);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Add proper error handling here
+        }
         return "redirect:/medications/list";
     }
 
