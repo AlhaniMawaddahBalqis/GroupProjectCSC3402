@@ -5,9 +5,10 @@ import com.csc3402.lab.pharmacy.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -29,19 +30,17 @@ public class PatientController {
     }
 
     @GetMapping("/add")
-    public String showAddPatientForm() {
+    public String showAddPatientForm(Model model) {
+        model.addAttribute("patient", new Patient());
         return "add-patient";
     }
 
     @PostMapping("/add")
-    public String addPatient(@RequestParam("patientId") String patientId,
-                             @RequestParam("name") String name,
-                             @RequestParam("ic") String ic,
-                             @RequestParam("dob") String dob,
-                             @RequestParam("contact") String contact,
-                             @RequestParam("gender") String gender) {
+    public String addPatient(@Valid @ModelAttribute("patient") Patient patient, BindingResult result) {
+        if (result.hasErrors()) {
+            return "add-patient";
+        }
         try {
-            Patient patient = new Patient(patientId, name, ic, LocalDate.parse(dob), contact, gender);
             patientService.addPatient(patient);
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,7 +57,10 @@ public class PatientController {
     }
 
     @PostMapping("/update")
-    public String updatePatient(@ModelAttribute Patient patient) {
+    public String updatePatient(@Valid @ModelAttribute("patient") Patient patient, BindingResult result) {
+        if (result.hasErrors()) {
+            return "update-patient";
+        }
         try {
             patientService.updatePatient(patient);
         } catch (Exception e) {
