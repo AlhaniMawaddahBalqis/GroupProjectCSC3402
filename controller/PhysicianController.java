@@ -5,9 +5,10 @@ import com.csc3402.lab.pharmacy.service.PhysicianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -28,21 +29,18 @@ public class PhysicianController {
         return "list-physician";
     }
 
-
-
     @GetMapping("/add")
-    public String showAddPhysicianForm() {
+    public String showAddPhysicianForm(Model model) {
+        model.addAttribute("physician", new Physician());
         return "add-physician";
     }
 
     @PostMapping("/add")
-    public String addPhysician(@RequestParam("physicianId") String physicianId,
-                               @RequestParam("name") String name,
-                               @RequestParam("contactNo") String contactNo,
-                               @RequestParam("email") String email,
-                               @RequestParam("prescdate") String prescdate) {
+    public String addPhysician(@Valid @ModelAttribute("physician") Physician physician, BindingResult result) {
+        if (result.hasErrors()) {
+            return "add-physician";
+        }
         try {
-            Physician physician = new Physician(physicianId, name, contactNo, email, LocalDate.parse(prescdate));
             physicianService.addPhysician(physician);
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,7 +57,10 @@ public class PhysicianController {
     }
 
     @PostMapping("/update")
-    public String updatePhysician(@ModelAttribute Physician physician) {
+    public String updatePhysician(@Valid @ModelAttribute("physician") Physician physician, BindingResult result) {
+        if (result.hasErrors()) {
+            return "update-physician";
+        }
         try {
             physicianService.updatePhysician(physician);
         } catch (Exception e) {
