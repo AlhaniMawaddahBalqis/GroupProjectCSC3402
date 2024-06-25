@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peony Pharmacy - Update Patient</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+        #sidebar {
+            width: 250px;
+            min-width: 0px;
+            background-color: #2c3e50;
+            color: white;
+            transition: width 0.3s ease;
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        #sidebar.active {
+            width: 0px;
+        }
+        #sidebar .sidebar-header {
+            text-align: center;
+            padding: 20px;
+            background-color: #34495e;
+        }
+        #sidebar ul.components {
+            padding: 20px 0;
+            list-style: none;
+        }
+        #sidebar ul li {
+            padding: 10px;
+            text-align: left;
+        }
+        #sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+        #sidebar ul li a:hover {
+            background-color: #495057;
+        }
+        #content {
+            flex: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+            transition: margin-left 0.3s ease;
+            margin-left: 250px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+        #content.active {
+            margin-left: 0;
+        }
+
+        .navbar {
+            background-color: #f8f9fa;
+            z-index: 999;
+        }
+
+        .container {
+            background:#f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #1056e3;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #1056e3;
+        }
+
+        .btn-back {
+            background-color: #7f8fa6;
+            border: none;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background-color: #576574;
+        }
+
+        h2 {
+            text-align: center;
+            color: #010101;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Peony Pharmacy</h3>
+        </div>
+        <ul class="components">
+            <li>
+                <a href="/index"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            <li>
+                <a href="/prescriptions/list"><i class="fas fa-prescription-bottle-alt"></i> Prescriptions</a>
+            </li>
+            <li class="active">
+                <a href="/patients/list"><i class="fas fa-user"></i> Patients</a>
+            </li>
+            <li>
+                <a href="/medications/list"><i class="fas fa-pills"></i> Medications</a>
+            </li>
+            <li>
+                <a href="/physicians/list"><i class="fas fa-user-md"></i> Physicians</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <input type="text" id="searchInput" class="form-control mr-sm-2" placeholder="Search" style="width: 300px;">
+                <div class="dropdown ml-3">
+                    <a href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="/images/profile.jpeg" alt="User Profile" class="profile-pic">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="/pharmacist-profile">Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/login">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h2>UPDATE PATIENT</h2>
+            <form id="patientForm" th:action="@{/patients/update}" th:object="${patient}" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> <!-- Add CSRF token here -->
+                <div class="form-group">
+                    <label for="patientId">Patient ID</label>
+                    <input type="text" class="form-control" id="patientId" th:field="*{patientId}" placeholder="Enter Patient ID" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Enter Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="ic">IC</label>
+                    <input type="text" class="form-control" id="ic" th:field="*{ic}" placeholder="Enter IC" required>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="text" class="form-control" id="dob" th:field="*{dob}" placeholder="Enter Date of Birth" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact">Contact No</label>
+                    <input type="text" class="form-control" id="contact" th:field="*{contact}" placeholder="Enter Contact No" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <input type="text" class="form-control" id="gender" th:field="*{gender}" placeholder="Enter Gender" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-save"></i> Update Patient</button>
+                <button type="button" class="btn btn-back btn-block" onclick="window.location.href='/patients/list';"><i class="fas fa-arrow-left"></i> Back to List</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+            $('#content').toggleClass('active');
+        });
+
+        $('#dob').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: '1900-01-01',
+            endDate: '2030-12-31',
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        $('#searchInput').on('keyup', function () {
+            var value = $(this).val().toLowerCase();
+            $('#patientsTable tbody tr').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

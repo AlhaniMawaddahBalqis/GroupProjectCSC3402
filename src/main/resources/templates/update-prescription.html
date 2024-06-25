@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peony Pharmacy - Update Prescription</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        #sidebar {
+            width: 250px;
+            min-width: 0px;
+            background-color: #2c3e50;
+            color: white;
+            transition: width 0.3s ease;
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        #sidebar.active {
+            width: 0px;
+        }
+
+        #sidebar .sidebar-header {
+            text-align: center;
+            padding: 20px;
+            background-color: #34495e;
+        }
+
+        #sidebar ul.components {
+            padding: 20px 0;
+            list-style: none;
+        }
+
+        #sidebar ul li {
+            padding: 10px;
+            text-align: left;
+        }
+
+        #sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        #sidebar ul li a:hover {
+            background-color: #495057;
+        }
+
+        #content {
+            flex: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+            transition: margin-left 0.3s ease;
+            margin-left: 250px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        #content.active {
+            margin-left: 80px;
+        }
+
+        .navbar {
+            background-color: #f8f9fa;
+            z-index: 999;
+        }
+
+        .container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #1056e3;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #1056e3;
+        }
+
+        .btn-back {
+            background-color: #7f8fa6;
+            border: none;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background-color: #576574;
+        }
+
+        h2 {
+            text-align: center;
+            color: #010101;
+            margin-bottom: 30px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Peony Pharmacy</h3>
+        </div>
+        <ul class="components">
+            <li>
+                <a href="/index"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            <li>
+                <a href="/prescriptions/list"><i class="fas fa-prescription-bottle-alt"></i> Prescriptions</a>
+            </li>
+            <li>
+                <a href="/patients/list"><i class="fas fa-user"></i> Patients</a>
+            </li>
+            <li>
+                <a href="/medications/list"><i class="fas fa-pills"></i> Medications</a>
+            </li>
+            <li>
+                <a href="/physicians/list"><i class="fas fa-user-md"></i> Physicians</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <input type="text" id="searchInput" class="form-control mr-sm-2" placeholder="Search" style="width: 300px;">
+                <div class="dropdown ml-3">
+                    <a href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="/images/profile.jpeg" alt="User Profile" class="profile-pic">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="/pharmacist-profile">Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/login">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h2>Update Prescription</h2>
+            <form id="prescriptionForm" th:action="@{/prescriptions/update}" th:object="${prescription}" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
+                <div class="form-group">
+                    <label for="prescId">Prescription ID</label>
+                    <input type="text" class="form-control" id="prescId" th:field="*{prescId}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="pharmacistId">Pharmacist ID</label>
+                    <input type="text" class="form-control" id="pharmacistId" th:field="*{pharmacist.pharmacistId}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="physicianId">Physician ID</label>
+                    <input type="text" class="form-control" id="physicianId" th:field="*{physician.physicianId}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="patientId">Patient ID</label>
+                    <input type="text" class="form-control" id="patientId" th:field="*{patient.patientId}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="medicationId">Medication</label>
+                    <select class="form-control" id="medicationId" th:field="*{medication.medId}" required>
+                        <option value="">Select Medication</option>
+                        <option th:each="medication : ${medications}" th:value="${medication.medId}" th:text="${medication.name}" th:selected="${medication.medId == prescription.medication.medId}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dosage">Dosage</label>
+                    <input type="text" class="form-control" id="dosage" th:field="*{dosage}" placeholder="Enter Dosage" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prescDate">Prescription Date</label>
+                    <input type="text" class="form-control" id="prescDate" th:field="*{prescDate}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select class="form-control" id="status" th:field="*{status}" required>
+                        <option value="Incomplete" th:selected="${prescription.status == 'Incomplete'}">Incomplete</option>
+                        <option value="Complete" th:selected="${prescription.status == 'Complete'}">Complete</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-save"></i> Update Prescription</button>
+                <button type="button" class="btn btn-back btn-block" onclick="window.location.href='/prescriptions/list';"><i class="fas fa-arrow-left"></i> Back</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+            $('#content').toggleClass('active');
+        });
+
+        $('#prescDate').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        $('#searchInput').on('keyup', function () {
+            var value = $(this).val().toLowerCase();
+            $('#medicationsTable tbody tr').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
